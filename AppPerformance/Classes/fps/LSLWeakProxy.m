@@ -25,7 +25,6 @@
 }
 
 #pragma mark - private
-
 - (id)forwardingTargetForSelector:(SEL)selector {
     return _target;
 }

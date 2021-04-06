@@ -46,12 +46,35 @@ class ViewController: UIViewController {
         // CPU、内存
         window.rootViewController?.view.addSubview(infoLabel)
         // FPS
-        let fpsView = LSLFPSMonitor.init(frame: CGRect.init(x: UIScreen.main.bounds.size.width - 100, y: 0, width: 100, height: 30))
-        window.rootViewController?.view.addSubview(fpsView)
+//        let fpsView = LSLFPSMonitor.init(frame: CGRect.init(x: UIScreen.main.bounds.size.width - 100, y: 0, width: 100, height: 30))
+//        window.rootViewController?.view.addSubview(fpsView)
         
         view.addSubview(showFPSBtn)
 
-        showUsageInfo()
+        //showUsageInfo()
+        registerObserver()
+    }
+    
+    private func registerObserver() {
+        let observer = CFRunLoopObserverCreateWithHandler(kCFAllocatorDefault, CFRunLoopActivity.beforeWaiting.rawValue | CFRunLoopActivity.beforeSources.rawValue | CFRunLoopActivity.afterWaiting.rawValue, true, 0) { (_, activity) in
+            switch activity {
+            case .entry:
+                NSLog("即将进入RunLoop")
+            case .beforeTimers:
+                NSLog("即将处理timer")
+            case .beforeSources:
+                NSLog("即将处理source")
+            case .beforeWaiting:
+                NSLog("即将进入休眠")
+            case .afterWaiting:
+                NSLog("从休眠中被唤醒")
+            case .exit:
+                NSLog("即将退出RunLoop")
+            default:
+                break
+            }
+        }
+        CFRunLoopAddObserver(CFRunLoopGetMain(), observer, CFRunLoopMode.commonModes)
     }
     
     // MARK: - actions
